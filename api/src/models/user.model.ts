@@ -14,13 +14,13 @@ export class User extends BaseEntity {
 	@PrimaryGeneratedColumn("uuid")
 	uId: string;
 
-	@Column()
+	@Column({ length: 30 })
 	firstName: string;
 
-	@Column()
+	@Column({ length: 30 })
 	lastName: string;
 
-	@Column({ unique: true })
+	@Column({ length: 40, unique: true })
 	email: string;
 
 	@Column({ select: false })
@@ -54,12 +54,3 @@ export class User extends BaseEntity {
 	}
 }
 
-export interface IUser {
-	firstName: string;
-	lastName: string;
-	email: string;
-	password: string;
-	isAdmin: boolean;
-	isUser: boolean;
-	state: boolean;
-}

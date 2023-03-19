@@ -1,12 +1,13 @@
 import { Response, Request } from "express";
 import { JwtPayload } from "jsonwebtoken";
 
-import { User, IUser } from "../models";
+import { User } from "../models";
 import { ErrorHandler, GetToken } from "../helpers";
 
 export async function GetUsers(req: Request, res: Response) {
+	const { from = 0, limit = 20 } = req.query;
+	
 	try {
-		const { from = 0, limit = 20 } = req.query;
 		const [users, total]: [User[], number] =
 			(await User.findAndCount({
 				where: { state: true },
@@ -23,8 +24,9 @@ export async function GetUsers(req: Request, res: Response) {
 }
 
 export async function GetUser(req: Request, res: Response) {
+	const { id } = req.params;
+	
 	try {
-		const { id } = req.params;
 		const user: User = await User.findOneByOrFail({ uId: id, state: true }) || {};
 
 		return res.status(200).json({ result: { ok: true, user } });
@@ -35,10 +37,10 @@ export async function GetUser(req: Request, res: Response) {
 }
 
 export async function CreateUser(req: Request, res: Response) {
-	try {
-		const { firstName, lastName, email, password, isAdmin } = req.body;
+	const { firstName, lastName, email, password, isAdmin } = req.body;
+	
+	try {		
 		const user: User = new User();
-
 		user.firstName = firstName;
 		user.lastName = lastName;
 		user.email = email;
@@ -48,20 +50,18 @@ export async function CreateUser(req: Request, res: Response) {
 
 		return res.status(201).json({ result: { ok: true, user }, });
 	} catch (error: unknown) {
-		if (error instanceof ErrorHandler)
-			return res.status(error.statusCode).json({ result: error.toJson() });
-
 		if (error instanceof Error)
 			return res.status(500).json({ result: { ok: false, message: error.message } });
 	}
 }
 
 export async function UpdateUser(req: Request, res: Response) {
+	const auth = (await GetToken(req)) as JwtPayload;
+	const { id } = req.params;
+	const { firstName, lastName, email, confirmPassword, isAdmin } = req.body;
+	
 	try {
-		const auth = (await GetToken(req)) as JwtPayload;
 		//TODO: check logic
-		const { id } = req.params;
-		const { firstName, lastName, email, confirmPassword, isAdmin } = req.body;
 		const user: User = await User.findOneOrFail({
 			select: ["firstName", "lastName", "email", "password", "isAdmin"],
 			where: { uId: id },
@@ -87,13 +87,13 @@ export async function UpdateUser(req: Request, res: Response) {
 }
 
 export async function DeleteUser(req: Request, res: Response) {
+	const { id } = req.params;
+	const { state } = req.body;
+	
 	try {
-		const { id } = req.params;
-		const { state }: IUser = req.body;
-
 		await User.update(
 			{ uId: id },
-			{ state: state, isUser: false, isAdmin: false }
+			{ state, isUser: false, isAdmin: false }
 		);
 
 		return res.status(204).json();

@@ -4,11 +4,19 @@ import express, { Express } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
+import fileupload from "express-fileupload";
 //import path from "path";
 
 import { AppDataSource } from "../config/orm.config";
 import { config } from "../config";
-import { UserRoutes, AuthRoutes, SearchRoutes,$404Route,HomeRoute } from "../routes";
+import {
+	AuthRoutes,
+	BookRoutes,
+	UserRoutes,
+	SearchRoutes,
+	HomeRoute,
+	$404Route,
+} from "../routes";
 
 export class Server {
 	private app: Express;
@@ -17,6 +25,7 @@ export class Server {
 		home: "/",
 		auth: "/auth",
 		users: "/users",
+		books: "/books",
 		search: "/search",
 		$404: "/",
 	};
@@ -37,6 +46,7 @@ export class Server {
 		this.app.use(express.json());
 		this.app.use(express.urlencoded());
 		//this.app.use(express.static(path.join(__dirname, "../public")));
+		this.app.use(fileupload({ useTempFiles: true, tempFileDir: './api/tmp' }));
 		this.app.use(morgan("dev"));
 	}
 
@@ -52,6 +62,7 @@ export class Server {
 	private routes(): void {
 		this.app.use(this.path.home, HomeRoute);
 		this.app.use(this.path.auth, AuthRoutes);
+		this.app.use(this.path.books, BookRoutes);
 		this.app.use(this.path.search, SearchRoutes);
 		this.app.use(this.path.users, UserRoutes);
 		this.app.use(this.path.$404, $404Route);
