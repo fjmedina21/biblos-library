@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "built": "tsc",
-    "prestart": "npm run built",
-    "start": "node dist/index.js",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node build/index.js",
     "dev": "npx ts-node-dev --respawn src/index.ts"
   },
   "keywords": [],
