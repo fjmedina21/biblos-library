@@ -88,12 +88,11 @@ export async function UpdateUser(req: Request, res: Response) {
 
 export async function DeleteUser(req: Request, res: Response) {
 	const { id } = req.params;
-	const { state } = req.body;
 	
 	try {
 		await User.update(
 			{ uId: id },
-			{ state, isUser: false, isAdmin: false }
+			{ state:false, isUser: false, isAdmin: false }
 		);
 
 		return res.status(204).json();
