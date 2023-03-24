@@ -17,7 +17,6 @@ const Register = () => {
     setUser((prev: User) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
-    console.log(user);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
