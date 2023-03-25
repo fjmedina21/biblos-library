@@ -1,9 +1,13 @@
-import React from 'react'
+import Featured from "../../components/featured/Featured";
+import Titles from "../../components/titles/Titles";
 
 const Home = () => {
   return (
-    <div>Home</div>
-  )
-}
+    <div>
+      <Featured />
+      <Titles />
+    </div>
+  );
+};
 
-export default Home
+export default Home;

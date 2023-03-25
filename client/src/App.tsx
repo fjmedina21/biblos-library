@@ -1,12 +1,4 @@
-import { Children, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Route,
-  Link,
-  Outlet,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
@@ -17,6 +9,7 @@ function App() {
     return (
       <div>
         <Navbar />
+
         <Outlet />
       </div>
     );
