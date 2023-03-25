@@ -1,11 +1,12 @@
 import { useState, useContext, FormEvent } from "react";
 import { AuthContextType } from "../../context/types";
 import { AuthContext } from "../../context/authContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [empty, setEmpty] = useState({ email: false, password: false });
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const [logging, setLogging] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
@@ -29,7 +30,9 @@ const Login = () => {
     }, 1500);
   };
   return (
-    <div className="flex min-h-screen justify-center selection:bg-rose-400 selection:text-white">
+    <div
+      className={`flex  min-h-screen justify-center selection:bg-rose-400 selection:text-white transition-all duration-300`}
+    >
       <div className="left flex flex-1 items-center my-auto flex-col">
         <div className="logo  relative mb-7">
           <div className="absolute h-[1.5rem] w-[1.5rem] bg-amber-300 -top-2 right-4">
