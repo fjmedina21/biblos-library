@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Glitter from "../glitter/Glitter";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
@@ -14,8 +13,14 @@ const Navbar = () => {
     };
   }, []);
   return (
-    <nav className={`flex sticky transition-all duration-500 bg-white  top-0 justify-between items-center  z-50 px-20 py-5  border-b-[1px]`}>
-      <div className={`relative transform translate-x-96 ${active?"translate-x-96":"translate-x-0"} transition-all duration-500 delay-100`}>
+    <nav
+      className={`flex sticky transition-all duration-500 bg-white  top-0 justify-between items-center  z-50 px-20 py-5  border-b-[1px]`}
+    >
+      <div
+        className={`relative transform  ${
+          active ? "translate-x-96" : "translate-x-0"
+        } transition-all duration-500 delay-100`}
+      >
         <div className="logo  relative ">
           <div className="absolute h-[1.5rem] w-[1.5rem] bg-amber-300 -top-2 right-4">
             <div className="circle absolute top-0 left-0 h-[0.8rem] w-[0.8rem] rounded-br-full bg-white"></div>
@@ -74,9 +79,6 @@ const Navbar = () => {
           <Link to="/" className="text-[2rem] font-bold relative z-40 ">
             Biblos
           </Link>
-
-          {/* <Glitter top={0} right={-10} bottom={0} left={0}/>
-           */}
         </div>
       </div>
       <div className="center">
@@ -97,7 +99,11 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div className={`right flex gap-4 transform ${active?"-translate-x-96":"-translate-x-0"} transition-all duration-500 delay-100`}>
+      <div
+        className={`right flex gap-4 transform ${
+          active ? "-translate-x-96" : "-translate-x-0"
+        } transition-all duration-500 delay-100`}
+      >
         <div className="item">
           <Link
             to="/login"
