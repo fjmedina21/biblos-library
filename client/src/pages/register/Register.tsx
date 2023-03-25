@@ -5,6 +5,8 @@ import { AuthContext } from "../../context/authContext";
 const Register = () => {
   const { signUp } = useContext(AuthContext) as AuthContextType;
   const navigate = useNavigate();
+  const [error, setError] = useState({ thereIs: false, title: "" });
+  const [registrando, setRegistrando] = useState<boolean>(false);
   const [user, setUser] = useState<User>({
     firstName: "",
     lastName: "",
@@ -21,8 +23,20 @@ const Register = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!Object.values(user).every((v) => v !== "")) {
+      setError({ thereIs: true, title: "Debe llenar todos los campos" });
+      return;
+    }
+    if (user.password !== user.confirmPassword) {
+      setError({ thereIs: true, title: "Contraseñas no coinciden" });
+      return;
+    }
+    setError({ thereIs: false, title: "" });
     signUp(user);
-    navigate("/login");
+    setRegistrando(true);
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
   };
 
   return (
@@ -96,46 +110,54 @@ const Register = () => {
             <div className="circle absolute bottom-0 left-0 h-[0.8rem] w-[0.8rem] rounded-tr-full bg-white"></div>
           </div>
 
-          <span className="text-[2.5rem] font-bold relative z-40 ">Biblos</span>
+          <span className="text-[2.5rem] font-bold relative z-40  ">
+            Biblos
+          </span>
         </div>
         <form
           action=""
-          className="flex w-3/4 xl:w-1/2 flex-col items-center gap-6 px-10 md:px-0"
+          className="flex w-3/4 xl:w-1/2 relative flex-col items-center gap-6 px-10 md:px-0"
           onSubmit={handleSubmit}
         >
           <h1 className="text-[1.5rem] font-bold md:text-[2rem]">
             Create an account
           </h1>
+          {error.thereIs && (
+            <span className="absolute top-11 font-medium text-red-500">
+              {error.title}
+            </span>
+          )}
+
           <input
-            className="w-full rounded-lg border-[1px] border-[gray] p-3 outline-none"
+            className={`w-full rounded-lg border-[1px]  border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500 p-3 outline-none invalid:border-red-500 `}
             type="text"
             name="firstName"
             onChange={handleOnChange}
             placeholder="Firstname"
           />
           <input
-            className="w-full rounded-lg border-[1px] border-[gray] p-3 outline-none"
+            className="w-full rounded-lg border-[1px] border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500  p-3 outline-none"
             type="text"
             name="lastName"
             onChange={handleOnChange}
             placeholder="Lastname"
           />
           <input
-            className="w-full rounded-lg border-[1px] border-[gray] p-3 outline-none"
+            className="w-full rounded-lg border-[1px] border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500  p-3 outline-none"
             type="text"
             name="email"
             onChange={handleOnChange}
             placeholder="Email"
           />
           <input
-            className="w-full rounded-lg border-[1px] border-[gray] p-3 outline-none"
+            className="w-full rounded-lg border-[1px] border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500  p-3 outline-none"
             type="password"
             name="password"
             onChange={handleOnChange}
             placeholder="Password"
           />
           <input
-            className="w-full rounded-lg border-[1px] border-[gray] p-3 outline-none"
+            className="w-full rounded-lg border-[1px] border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500  p-3 outline-none"
             type="password"
             name="confirmPassword"
             onChange={handleOnChange}
@@ -143,7 +165,11 @@ const Register = () => {
           />
 
           <button className="w-full rounded-lg bg-indigo-600 p-3 font-medium text-white">
-            Sign Up
+            {registrando ? (
+              <span className="h-5 w-5 rounded-full border-b-[2px] border-t-[2px] border-white inline-block animate-spin"></span>
+            ) : (
+              "Sign Up"
+            )}
           </button>
           <span>
             Do you have an account?{" "}
