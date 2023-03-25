@@ -5,7 +5,14 @@ import { AuthContext } from "../../context/authContext";
 const Register = () => {
   const { signUp } = useContext(AuthContext) as AuthContextType;
   const navigate = useNavigate();
-  const [error, setError] = useState({ thereIs: false, title: "" });
+  const [error, setError] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+    notMatch: false,
+  });
   const [registrando, setRegistrando] = useState<boolean>(false);
   const [user, setUser] = useState<User>({
     firstName: "",
@@ -24,14 +31,36 @@ const Register = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!Object.values(user).every((v) => v !== "")) {
-      setError({ thereIs: true, title: "Debe llenar todos los campos" });
+      setError({
+        firstName: user.firstName === "" ? true : false,
+        lastName: user.lastName === "" ? true : false,
+        email: user.email === "" ? true : false,
+        password: user.password === "" ? true : false,
+        confirmPassword: user.confirmPassword === "" ? true : false,
+        notMatch: false,
+      });
       return;
     }
     if (user.password !== user.confirmPassword) {
-      setError({ thereIs: true, title: "Contraseñas no coinciden" });
+      setError({
+        firstName: false,
+        lastName: false,
+        email: false,
+        password: false,
+        confirmPassword: false,
+        notMatch: true,
+      });
       return;
     }
-    setError({ thereIs: false, title: "" });
+
+    setError({
+      firstName: false,
+      lastName: false,
+      email: false,
+      password: false,
+      confirmPassword: false,
+      notMatch: false,
+    });
     signUp(user);
     setRegistrando(true);
     setTimeout(() => {
@@ -122,47 +151,61 @@ const Register = () => {
           <h1 className="text-[1.5rem] font-bold md:text-[2rem]">
             Create an account
           </h1>
-          {error.thereIs && (
-            <span className="absolute top-11 font-medium text-red-500">
-              {error.title}
-            </span>
-          )}
 
           <input
-            className={`w-full rounded-lg border-[1px]  border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500 p-3 outline-none invalid:border-red-500 `}
+            className={`w-full rounded-lg border-[1px]  ${
+              error.firstName ? "border-rose-500" : "border-gray-300"
+            } caret-pink-400 focus:border-indigo-600 transition duration-500 p-3 outline-none invalid:border-red-500 `}
             type="text"
             name="firstName"
             onChange={handleOnChange}
             placeholder="Firstname"
           />
           <input
-            className="w-full rounded-lg border-[1px] border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500  p-3 outline-none"
+            className={`w-full rounded-lg border-[1px]  ${
+              error.lastName ? "border-rose-500" : "border-gray-300"
+            } caret-pink-400 focus:border-indigo-600 transition duration-500 p-3 outline-none invalid:border-red-500 `}
             type="text"
             name="lastName"
             onChange={handleOnChange}
             placeholder="Lastname"
           />
           <input
-            className="w-full rounded-lg border-[1px] border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500  p-3 outline-none"
+            className={`w-full rounded-lg border-[1px]  ${
+              error.email ? "border-rose-500" : "border-gray-300"
+            } caret-pink-400 focus:border-indigo-600 transition duration-500 p-3 outline-none invalid:border-red-500 `}
             type="text"
             name="email"
             onChange={handleOnChange}
             placeholder="Email"
           />
           <input
-            className="w-full rounded-lg border-[1px] border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500  p-3 outline-none"
+            className={`w-full rounded-lg border-[1px]  ${
+              error.password ? "border-rose-500" : "border-gray-300"
+            } caret-pink-400 focus:border-indigo-600 transition duration-500 p-3 outline-none invalid:border-red-500 `}
             type="password"
             name="password"
             onChange={handleOnChange}
             placeholder="Password"
           />
           <input
-            className="w-full rounded-lg border-[1px] border-gray-300 caret-pink-400 focus:border-indigo-600 transition duration-500  p-3 outline-none"
+            className={`w-full rounded-lg border-[1px]  ${
+              error.confirmPassword
+                ? "border-rose-500"
+                : error.notMatch
+                ? "border-amber-500"
+                : "border-gray-300"
+            } caret-pink-400 focus:border-indigo-600 transition duration-500 p-3 outline-none invalid:border-red-500 `}
             type="password"
             name="confirmPassword"
             onChange={handleOnChange}
             placeholder="Confirm password"
           />
+          {error.notMatch && (
+            <span className="self-start text-amber-500 text-sm">
+              Passwords doesn't match
+            </span>
+          )}
 
           <button className="w-full rounded-lg bg-indigo-600 p-3 font-medium text-white">
             {registrando ? (
