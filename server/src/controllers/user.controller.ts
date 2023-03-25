@@ -6,7 +6,7 @@ import { ErrorHandler, GetToken } from "../helpers";
 
 export async function GetUsers(req: Request, res: Response) {
 	const { from = 0, limit = 20 } = req.query;
-	
+
 	try {
 		const [users, total]: [User[], number] =
 			(await User.findAndCount({
@@ -25,7 +25,7 @@ export async function GetUsers(req: Request, res: Response) {
 
 export async function GetUser(req: Request, res: Response) {
 	const { id } = req.params;
-	
+
 	try {
 		const user: User = await User.findOneByOrFail({ uId: id, state: true }) || {};
 
@@ -38,8 +38,8 @@ export async function GetUser(req: Request, res: Response) {
 
 export async function CreateUser(req: Request, res: Response) {
 	const { firstName, lastName, email, password, isAdmin } = req.body;
-	
-	try {		
+
+	try {
 		const user: User = new User();
 		user.firstName = firstName;
 		user.lastName = lastName;
@@ -48,7 +48,7 @@ export async function CreateUser(req: Request, res: Response) {
 		user.hashPassword(password);
 		await user.save();
 
-		return res.status(201).json({ result: { ok: true, user }, });
+		return res.status(201).json({ result: { ok: true, message: "user created" }, });
 	} catch (error: unknown) {
 		if (error instanceof Error)
 			return res.status(500).json({ result: { ok: false, message: error.message } });
@@ -56,10 +56,10 @@ export async function CreateUser(req: Request, res: Response) {
 }
 
 export async function UpdateUser(req: Request, res: Response) {
-	const auth = (await GetToken(req)) as JwtPayload;
 	const { id } = req.params;
 	const { firstName, lastName, email, confirmPassword, isAdmin } = req.body;
-	
+	const auth = (await GetToken(req)) as JwtPayload;
+
 	try {
 		//TODO: check logic
 		const user: User = await User.findOneOrFail({
@@ -88,14 +88,14 @@ export async function UpdateUser(req: Request, res: Response) {
 
 export async function DeleteUser(req: Request, res: Response) {
 	const { id } = req.params;
-	
+
 	try {
 		await User.update(
 			{ uId: id },
-			{ state:false, isUser: false, isAdmin: false }
+			{ state: false, isUser: false, isAdmin: false }
 		);
 
-		return res.status(204).json();
+		return res.status(204);
 	} catch (error: unknown) {
 		if (error instanceof Error)
 			return res.status(500).json({ result: { ok: false, message: error.message } });

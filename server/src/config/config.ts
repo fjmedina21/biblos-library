@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 export const config = {
-	DEV_PORT:  3000,
+	DEV_PORT:  8080,
 
 	DB_HOST: "localhost",
 	DB_PORT: 3307,

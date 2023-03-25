@@ -20,8 +20,7 @@ export async function PhotoUpload(file: UploadedFile, subfolder: string): Promis
     if (error) return error;
 
     const { tempFilePath } = file;
-    const data = await cloudinary.uploader.upload(tempFilePath, { folder: `bibloslibrary/${subfolder}` });
-    return data;
+    return await cloudinary.uploader.upload(tempFilePath, { folder: `bibloslibrary/${subfolder}` });
 }
 
 export async function PhotoDelete(public_id: string): Promise<void> {

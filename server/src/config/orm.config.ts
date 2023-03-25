@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 
 import { User, Book } from "../models";
-import { config } from "./index";
+import { config } from "../config";
 
 export const AppDataSource = new DataSource({
 	type: "mysql",
@@ -10,6 +10,6 @@ export const AppDataSource = new DataSource({
 	username: config.DB_USER,
 	password: config.DB_PASS,
 	database: config.DB_NAME,
-	entities: [User, Book],
-	synchronize: true, //remove in production
+	entities: [User, Book], 
+	synchronize: true
 });

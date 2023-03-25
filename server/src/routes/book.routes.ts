@@ -37,7 +37,12 @@ BookRoutes.post(
 
 BookRoutes.patch(
     "/:id",
-    [ValidateJWT, IsAdmin, BookIdExist, ValidateFields,],
+    [ValidateJWT, IsAdmin, BookIdExist,
+        check(["title", "genre", "author", "description"]).trim(),
+        check("title", "Title required").notEmpty(),
+        check("genre", "Genre required").notEmpty(),
+        check("author", "Authors required").notEmpty(),
+        ValidateFields,],
     UpdateBook
 );
 

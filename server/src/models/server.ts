@@ -59,12 +59,12 @@ export class Server {
 	}
 
 	private routes(): void {
-		this.app.use(this.path.$404, $404Route);
 		this.app.use(this.path.home, HomeRoute);
 		this.app.use(this.path.auth, AuthRoutes);
 		this.app.use(this.path.books, BookRoutes);
 		this.app.use(this.path.users, UserRoutes);
 		this.app.use(this.path.search, SearchRoutes);
+		this.app.use(this.path.$404, $404Route);
 	}
 
 	private listen(): void {
