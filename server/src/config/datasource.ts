@@ -1,7 +1,8 @@
 import { DataSource } from "typeorm";
 
-import { User, Book } from "../models";
-import { config } from "../config";
+import { Book } from "../models/book.model";
+import { User } from "../models/user.model";
+import { config } from ".";
 
 export const AppDataSource = new DataSource({
 	type: "mysql",

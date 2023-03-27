@@ -1,8 +1,7 @@
 import { Response, Request } from "express";
-import { JwtPayload } from "jsonwebtoken";
 
 import { User } from "../models";
-import { ErrorHandler, GetToken } from "../helpers";
+import { ErrorHandler } from "../helpers";
 
 export async function GetUsers(req: Request, res: Response) {
 	const { from = 0, limit = 20 } = req.query;
@@ -57,26 +56,19 @@ export async function CreateUser(req: Request, res: Response) {
 
 export async function UpdateUser(req: Request, res: Response) {
 	const { id } = req.params;
-	const { firstName, lastName, email, confirmPassword, isAdmin } = req.body;
-	const auth = (await GetToken(req)) as JwtPayload;
+	const { confirmPassword, ...payload } = req.body;
 
 	try {
-		//TODO: check logic
 		const user: User = await User.findOneOrFail({
-			select: ["firstName", "lastName", "email", "password", "isAdmin"],
+			select: ["firstName", "lastName", "email", "password"],
 			where: { uId: id },
 		});
-
-		if (firstName) user.firstName = firstName;
-		if (lastName) user.lastName = lastName;
-		if (email) user.email = email;
-		if (auth.isAdmin) user.isAdmin = isAdmin;
 
 		if (!user.comparePassword(confirmPassword))
 			throw new ErrorHandler("Your password is incorrect", 400);
 
-		await user.save();
-		return res.status(200).json({ result: { ok: true, message: "User updated", user } });
+		await User.update({ uId: id }, payload);
+		return res.status(200).json({ result: { ok: true, message: "User updated" } });
 	} catch (error: unknown) {
 		if (error instanceof ErrorHandler)
 			return res.status(error.statusCode).json({ result: error.toJson() });
@@ -95,7 +87,7 @@ export async function DeleteUser(req: Request, res: Response) {
 			{ state: false, isUser: false, isAdmin: false }
 		);
 
-		return res.status(204);
+		return res.status(204).json();
 	} catch (error: unknown) {
 		if (error instanceof Error)
 			return res.status(500).json({ result: { ok: false, message: error.message } });

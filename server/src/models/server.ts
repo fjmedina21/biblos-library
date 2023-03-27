@@ -7,7 +7,7 @@ import morgan from "morgan";
 import express, { Express } from "express";
 import fileupload from "express-fileupload";
 
-import { AppDataSource } from "../config/orm.config";
+import { AppDataSource } from "../config";
 import { config } from "../config";
 import {
 	$404Route,
@@ -47,7 +47,7 @@ export class Server {
 		this.app.use(express.json());
 		this.app.use(express.urlencoded());
 		this.app.use(express.static(path.join(__dirname, "../public")));
-		this.app.use(fileupload({ useTempFiles: true, tempFileDir: '../tmp' }));
+		this.app.use(fileupload({ useTempFiles: true }));
 	}
 
 	private async dbConnection(): Promise<void> {

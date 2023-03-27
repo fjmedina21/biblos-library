@@ -5,7 +5,7 @@ import { GenerateJWT, GenerateResetJWT, ValidateResetJWT, ErrorHandler } from ".
 
 export async function SignUp(req: Request, res: Response) {
 	const { firstName, lastName, email, password, confirmPassword } = req.body;
-	
+
 	try {
 		const user: User = new User();
 
@@ -28,14 +28,14 @@ export async function SignUp(req: Request, res: Response) {
 
 export const LogIn = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
-	
+
 	try {
-		const user: User = await User.findOneOrFail({
+		const user: User | null = await User.findOne({
 			select: ["uId", "email", "password", "isAdmin", "isUser", "state",],
 			where: { email },
 		});
 
-		if (!user.state) throw new ErrorHandler("That account doesn't exist. Enter a different account or create a new one", 400);
+		if (!user || !user.state) throw new ErrorHandler("That account doesn't exist. Enter a different account or create a new one", 400);
 
 		if (!(user.comparePassword(password))) throw new ErrorHandler("Your account or password is incorrect", 400);
 
@@ -53,7 +53,7 @@ export const LogIn = async (req: Request, res: Response) => {
 
 export async function ChangePassword(req: Request, res: Response) {
 	const { id } = req.params;
-	
+
 	try {
 		const { currentPassword, newPassword, confirmPassword } = req.body;
 
@@ -77,7 +77,7 @@ export async function ChangePassword(req: Request, res: Response) {
 
 export async function ForgotPassword(req: Request, res: Response) {
 	const { email } = req.body;
-	
+
 	try {
 		const emailExist: User | null = await User.findOneBy({
 			email,
@@ -111,7 +111,7 @@ export async function ForgotPassword(req: Request, res: Response) {
 export async function ResetPassword(req: Request, res: Response) {
 	const { newPassword, confirmPassword } = req.body;
 	const { resetToken } = req.params;
-	
+
 	try {
 		const user: User = await ValidateResetJWT(resetToken);
 

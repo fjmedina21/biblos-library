@@ -3,7 +3,7 @@ import { UploadedFile } from "express-fileupload";
 import fs from "fs-extra";
 
 import { Book } from "../models";
-import { PhotoUpload, PhotoDelete, PhotoUpdate } from "../helpers";
+import { PhotoUpload, PhotoDelete, PhotoUpdate, ErrorHandler } from "../helpers";
 
 export async function GetBooks(req: Request, res: Response) {
     const { from = 0, limit = 20 } = req.query;
@@ -48,11 +48,11 @@ export async function CreateBook(req: Request, res: Response) {
         book.price = price;
         book.stock = stock;
 
-        if (coverFile) {
-            await PhotoUpload(coverFile, "books")
-                .then(({ public_id, secure_url }) => { book.cover = { public_id, secure_url }; })
-                .catch((reason) => { throw new Error(reason); });
-        }
+        if (!coverFile) throw new ErrorHandler("Cover Image is required", 400);
+        
+        await PhotoUpload(coverFile, "books")
+            .then(({ public_id, secure_url }) => { book.cover = { public_id, secure_url }; })
+            .catch((reason) => { throw new Error(reason); });
 
         await book.save();
         return res.status(201).json({ result: { ok: true, message: "book created" }, });
@@ -66,29 +66,20 @@ export async function CreateBook(req: Request, res: Response) {
 
 export async function UpdateBook(req: Request, res: Response) {
     const { id } = req.params;
-    //const { title, author, genre, description, price, stock } = req.body;
-    const { ...entity } = req.body;
+    const { ...payload } = req.body;
     const coverFile = req.files?.cover as UploadedFile;
 
     try {
         const book: Book = await Book.findOneByOrFail({ uId: id });
 
-
-        await Book.update({ uId: id }, entity);
-        /*book.title = title ? title : book.title;
-        book.title = author ? author : book.author;
-        book.title = genre ? genre : book.genre;
-        book.title = description ? description : book.description;
-        book.title = price ? price : book.price;
-        book.title = stock ? stock : book.stock;*/
         if (coverFile) {
             await PhotoUpdate(book.cover.public_id, coverFile, "books")
-                .then(({ public_id, secure_url }) => { book.cover = { public_id, secure_url }; })
+                .then(async ({ public_id, secure_url }) => await Book.update({ uId: id }, { cover: { public_id, secure_url } }))
                 .catch((reason) => { throw new Error(reason); });
         }
 
-        await book.save();
-        return res.status(200).json({ result: { ok: true, message: "book updated" }, });
+        await Book.update({ uId: id }, payload);
+        return res.status(200).json({ result: { ok: true, message: "book updated" } });
     } catch (error: unknown) {
         if (error instanceof Error)
             return res.status(500).json({ result: { ok: false, message: error.message } });
@@ -102,11 +93,11 @@ export async function DeleteBook(req: Request, res: Response) {
     const { id } = req.params;
 
     try {
-        const { cover } = await Book.findOneByOrFail({ uId: id });
-        if (cover) await PhotoDelete(cover.public_id);
-        await Book.delete({ uId: id });
+        const { cover }: Book = await Book.findOneByOrFail({ uId: id });
+        if (cover.public_id) await PhotoDelete(cover.public_id);
 
-        return res.status(204);
+        await Book.delete({ uId: id });
+        return res.status(204).json();
     } catch (error: unknown) {
         if (error instanceof Error)
             return res.status(500).json({ result: { ok: false, message: error.message } });
