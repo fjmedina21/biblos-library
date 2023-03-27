@@ -40,7 +40,7 @@ export const LogIn = async (req: Request, res: Response) => {
 		if (!(user.comparePassword(password))) throw new ErrorHandler("Your account or password is incorrect", 400);
 
 		const token = await GenerateJWT(user.uId, user.isAdmin, user.isUser) as string;
-//aqui
+
 		res.status(200).json({
 			result: { ok: true, message: "logged in", token }
 		});

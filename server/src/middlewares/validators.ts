@@ -21,7 +21,7 @@ export async function ValidateJWT(
 
 		next();
 	} catch (error: unknown) {
-		if (error instanceof Error) return res.status(400).json({ result: { ok: false, message: error.message } });
+		if (error instanceof Error) return res.status(401).json({ result: { ok: false, message: error.message } });
 	}
 }
 
@@ -29,13 +29,13 @@ export async function IsAdmin(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { isAdmin } = (await GetToken(req)) as JwtPayload;
 
-		if (!isAdmin) throw new ErrorHandler("Need ADMIN access",401);
+		if (!isAdmin) throw new ErrorHandler("Need ADMIN access",403);
 
 		next();
 	} catch (error: unknown) {
 		if (error instanceof ErrorHandler) return res.status(error.statusCode).json({ result: { ok: false, message: error.message } });
 
-		if (error instanceof Error) return res.status(403).json({ result: { ok: false, message: error.message } });
+		if (error instanceof Error) return res.status(500).json({ result: { ok: false, message: error.message } });
 	}
 }
 
@@ -47,13 +47,13 @@ export async function IsUser(
 	try {
 		const { isUser } = (await GetToken(req)) as JwtPayload;
 
-		if (!isUser) throw new ErrorHandler("login or signup", 400);
+		if (!isUser) throw new ErrorHandler("login or signup", 401);
 
 		if (isUser) next();
 	} catch (error: unknown) {
 		if (error instanceof ErrorHandler) return res.status(error.statusCode).json({ result: { ok: false, message: error.message } });
 
-		if (error instanceof Error) return res.status(400).json({ result: { ok: false, message: error.message } });
+		if (error instanceof Error) return res.status(500).json({ result: { ok: false, message: error.message } });
 	}
 }
 
