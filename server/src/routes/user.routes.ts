@@ -39,7 +39,10 @@ UserRoutes.patch(
 	"/:id",
 	[ValidateJWT, IsUser, UserIdExist,
 		check(["firstName", "lastName", "email"]).trim(),
-		//check("email","Invalid email").isEmail(),
+		check("firstName", "firstName required").notEmpty(),
+		check("lastName", "lastName required").notEmpty(),
+		check("email", "email required").notEmpty(),
+		check("email","Invalid email").isEmail(),
 		check("confirmPassword", "Password confirmatin required").notEmpty(),
 		ValidateFields],
 	UpdateUser

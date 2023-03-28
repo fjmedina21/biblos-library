@@ -1,8 +1,13 @@
-import { v2, UploadApiResponse } from "cloudinary";
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { UploadedFile } from "express-fileupload";
+import { config } from "../config";
 
-const cloudinary = v2;
-cloudinary.config("cloudinary://468217321751245:TOQrIGdU6h6RmaTbdH41FqXFagg@fjmedina");
+cloudinary.config({
+    cloud_name: config.CLOUDINARY_NAME,
+    api_key: config.CLOUDINARY_KEY,
+    api_secret: config.CLOUDINARY_SECRET,
+    secure: true
+});
 
 function validateFileExt(file: UploadedFile) {
     try {
@@ -20,8 +25,7 @@ export async function PhotoUpload(file: UploadedFile, subfolder: string): Promis
     if (error) return error;
 
     const { tempFilePath } = file;
-    const data = await cloudinary.uploader.upload(tempFilePath, { folder: `bibloslibrary/${subfolder}` });
-    return data;
+    return await cloudinary.uploader.upload(tempFilePath, { folder: `bibloslibrary/${subfolder}` });
 }
 
 export async function PhotoDelete(public_id: string): Promise<void> {
@@ -34,6 +38,5 @@ export async function PhotoUpdate(public_id: string, file: UploadedFile, subfold
     if (error) return error;
 
     await PhotoDelete(public_id);
-    return await PhotoUpload(file, subfolder);;
-
+    return await PhotoUpload(file, subfolder);
 }

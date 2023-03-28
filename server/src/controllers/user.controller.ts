@@ -1,12 +1,11 @@
 import { Response, Request } from "express";
-import { JwtPayload } from "jsonwebtoken";
 
 import { User } from "../models";
-import { ErrorHandler, GetToken } from "../helpers";
+import { ErrorHandler } from "../helpers";
 
 export async function GetUsers(req: Request, res: Response) {
 	const { from = 0, limit = 20 } = req.query;
-	
+
 	try {
 		const [users, total]: [User[], number] =
 			(await User.findAndCount({
@@ -25,7 +24,7 @@ export async function GetUsers(req: Request, res: Response) {
 
 export async function GetUser(req: Request, res: Response) {
 	const { id } = req.params;
-	
+
 	try {
 		const user: User = await User.findOneByOrFail({ uId: id, state: true }) || {};
 
@@ -38,8 +37,8 @@ export async function GetUser(req: Request, res: Response) {
 
 export async function CreateUser(req: Request, res: Response) {
 	const { firstName, lastName, email, password, isAdmin } = req.body;
-	
-	try {		
+
+	try {
 		const user: User = new User();
 		user.firstName = firstName;
 		user.lastName = lastName;
@@ -48,7 +47,7 @@ export async function CreateUser(req: Request, res: Response) {
 		user.hashPassword(password);
 		await user.save();
 
-		return res.status(201).json({ result: { ok: true, user }, });
+		return res.status(201).json({ result: { ok: true, message: "user created" }, });
 	} catch (error: unknown) {
 		if (error instanceof Error)
 			return res.status(500).json({ result: { ok: false, message: error.message } });
@@ -56,27 +55,20 @@ export async function CreateUser(req: Request, res: Response) {
 }
 
 export async function UpdateUser(req: Request, res: Response) {
-	const auth = (await GetToken(req)) as JwtPayload;
 	const { id } = req.params;
-	const { firstName, lastName, email, confirmPassword, isAdmin } = req.body;
-	
+	const { confirmPassword, ...payload } = req.body;
+
 	try {
-		//TODO: check logic
 		const user: User = await User.findOneOrFail({
-			select: ["firstName", "lastName", "email", "password", "isAdmin"],
+			select: ["firstName", "lastName", "email", "password"],
 			where: { uId: id },
 		});
-
-		if (firstName) user.firstName = firstName;
-		if (lastName) user.lastName = lastName;
-		if (email) user.email = email;
-		if (auth.isAdmin) user.isAdmin = isAdmin;
 
 		if (!user.comparePassword(confirmPassword))
 			throw new ErrorHandler("Your password is incorrect", 400);
 
-		await user.save();
-		return res.status(200).json({ result: { ok: true, message: "User updated", user } });
+		await User.update({ uId: id }, payload);
+		return res.status(200).json({ result: { ok: true, message: "User updated" } });
 	} catch (error: unknown) {
 		if (error instanceof ErrorHandler)
 			return res.status(error.statusCode).json({ result: error.toJson() });
@@ -88,11 +80,11 @@ export async function UpdateUser(req: Request, res: Response) {
 
 export async function DeleteUser(req: Request, res: Response) {
 	const { id } = req.params;
-	
+
 	try {
 		await User.update(
 			{ uId: id },
-			{ state:false, isUser: false, isAdmin: false }
+			{ state: false, isUser: false, isAdmin: false }
 		);
 
 		return res.status(204).json();
