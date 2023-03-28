@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContextType, User } from "../../context/types";
 import { AuthContext } from "../../context/authContext";
 const Register = () => {
-  const { signUp } = useContext(AuthContext) as AuthContextType;
+  const { signUp, okSignUp } = useContext(AuthContext) as AuthContextType;
   const navigate = useNavigate();
   const [error, setError] = useState({
     firstName: false,
@@ -63,11 +63,10 @@ const Register = () => {
     });
     signUp(user);
     setRegistrando(true);
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
   };
-
+  useEffect(() => {
+    if (okSignUp) navigate("/login");
+  }, [okSignUp]);
   return (
     <div className="flex min-h-screen justify-center selection:bg-rose-400 selection:text-white">
       <div className="right px- hidden flex-1 items-center justify-center bg-[url('https://images.pexels.com/photos/13159182/pexels-photo-13159182.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')] bg-cover md:flex">

@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
+import { AuthContextType } from "../../context/types";
+import Config from "../config/Config";
 
 const Navbar = () => {
+  const {  currentUser } = useContext(AuthContext) as AuthContextType;
+
   const [active, setActive] = useState(false);
+  const [open, setOpen] = useState(false);
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
   };
@@ -18,7 +24,7 @@ const Navbar = () => {
     >
       <div
         className={`relative transform  ${
-          active ? "translate-x-96" : "translate-x-0"
+          currentUser?"" :  active ? "translate-x-96" : "translate-x-0"
         } transition-all duration-500 delay-100`}
       >
         <div className="logo  relative ">
@@ -85,7 +91,7 @@ const Navbar = () => {
         <div className="links">
           <div className="flex gap-3">
             <Link
-              to="#nosotros"
+              to="nosotros"
               className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition duration-300"
             >
               Miembros
@@ -99,28 +105,45 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div
-        className={`right flex gap-4 transform ${
-          active ? "-translate-x-96" : "-translate-x-0"
-        } transition-all duration-500 delay-100`}
-      >
-        <div className="item">
-          <Link
-            to="/login"
-            className="font-medium cursor-pointer hover:text-blue-400 transition duration-300"
+      {currentUser ? (
+        <div className={` relative`}>
+          <div
+            className={`flex items-center gap-1 cursor-pointer`}
+            onClick={() => setOpen(!open)}
           >
-            Sign In
-          </Link>
+            <img
+              className="h-10 w-10 rounded-full border-[1px] border-gray-200 "
+              src="/img/no-avatar.png"
+              alt=""
+            />
+            <span>{currentUser.firstName}</span>
+          </div>
+          {open && <Config />}
         </div>
-        <div className="item">
-          <Link
-            to="/register"
-            className="font-medium border-[1px] p-3 rounded-lg bg-indigo-600 text-white cursor-pointer hover:text-white hover:bg-indigo-700 transition duration-300"
-          >
-            Sign Up
-          </Link>
+      ) : (
+        <div
+          className={`right flex gap-4 transform ${
+            active ? "-translate-x-96" : "-translate-x-0"
+          } transition-all duration-500 delay-100`}
+        >
+          <div className="item">
+            <Link
+              to="/login"
+              className="font-medium cursor-pointer hover:text-blue-400 transition duration-300"
+            >
+              Sign In
+            </Link>
+          </div>
+          <div className="item">
+            <Link
+              to="/register"
+              className="font-medium border-[1px] p-3 rounded-lg bg-indigo-600 text-white cursor-pointer hover:text-white hover:bg-indigo-700 transition duration-300"
+            >
+              Sign Up
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };

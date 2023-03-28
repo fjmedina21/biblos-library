@@ -1,16 +1,15 @@
-import { useState, useContext, FormEvent } from "react";
+import { useState, useContext, FormEvent, useEffect } from "react";
 import { AuthContextType } from "../../context/types";
 import { AuthContext } from "../../context/authContext";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [empty, setEmpty] = useState({ email: false, password: false });
-  const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [logging, setLogging] = useState<boolean>(false);
+
   const [password, setPassword] = useState<string>("");
-  const { login } = useContext(AuthContext) as AuthContextType;
+  const { login, ok, logging } = useContext(AuthContext) as AuthContextType;
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email) {
@@ -24,11 +23,14 @@ const Login = () => {
     setEmpty({ email: false, password: false });
 
     login({ email, password });
-    setLogging(true);
-    setTimeout(() => {
-      navigate("/");
-    }, 1500);
+
   };
+  useEffect(() => {
+    if (ok) {
+      navigate("/home");
+    }
+  }, [ok]);
+
   return (
     <div
       className={`flex  min-h-screen justify-center selection:bg-rose-400 selection:text-white transition-all duration-300`}
@@ -103,7 +105,7 @@ const Login = () => {
             className={`w-full rounded-lg border-[1px] ${
               empty.email ? "border-rose-500" : "border-gray-300"
             } caret-pink-400 focus:border-indigo-600 transition duration-500 p-3 outline-none`}
-            type="text"
+            type="email"
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -111,7 +113,7 @@ const Login = () => {
             className={`w-full rounded-lg border-[1px] ${
               empty.password ? "border-rose-500" : "border-gray-300"
             } caret-pink-400 focus:border-indigo-600 transition duration-500 p-3 outline-none`}
-            type="text"
+            type="password"
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
