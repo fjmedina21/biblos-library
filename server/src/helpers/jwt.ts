@@ -60,6 +60,5 @@ export async function GetToken(
 	req: Request
 ): Promise<string | jwt.JwtPayload | undefined> {
 	const token: string | undefined = req.header("auth");
-
 	if (token) return jwt.verify(token, config.JWT_SECRECT);
 }
