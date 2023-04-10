@@ -13,8 +13,6 @@ declare global {
 			JWT_RESET_TOKEN_SECRECT: string;
 			JWT_RESET_TOKEN_EXPIRES_IN: string;
 
-			CLOUDINARY_URL: string;
-			CLOUDINARY_URL: string;
 			CLOUDINARY_NAME: string;
 			CLOUDINARY_SECRET: string;
 			CLOUDINARY_KEY: string;

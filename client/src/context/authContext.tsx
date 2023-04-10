@@ -9,7 +9,7 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(
     JSON.parse(localStorage.getItem("user")!) || null
   );
-  const [error, setError] = useState<boolean>(false);
+  //const [error, setError] = useState<boolean>(false);
   const [ok, setOk] = useState<boolean>(false);
   const [okSignUp, setOkSignUp] = useState<boolean>(false);
   const [logging, setLogging] = useState<boolean>(false);

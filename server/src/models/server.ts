@@ -7,16 +7,9 @@ import morgan from "morgan";
 import express, { Express } from "express";
 import fileupload from "express-fileupload";
 
-import { AppDataSource } from "../config";
 import { config } from "../config";
-import {
-	$404Route,
-	HomeRoute,
-	AuthRoutes,
-	BookRoutes,
-	UserRoutes,
-	SearchRoutes,
-} from "../routes";
+import { AppDataSource } from "../config/datasource";
+import { $404Route, HomeRoute, AuthRoutes, BookRoutes, UserRoutes, SearchRoutes, } from "../routes";
 
 export class Server {
 	private app: Express;
@@ -32,7 +25,7 @@ export class Server {
 
 	constructor() {
 		this.app = express();
-		this.PORT = config.DEV_PORT || 3000;
+		this.PORT = config.DEV_PORT || 3001;
 
 		this.dbConnection();
 		this.middlewares();
@@ -61,8 +54,8 @@ export class Server {
 	private routes(): void {
 		this.app.use(this.path.home, HomeRoute);
 		this.app.use(this.path.auth, AuthRoutes);
-		this.app.use(this.path.books, BookRoutes);
 		this.app.use(this.path.users, UserRoutes);
+		this.app.use(this.path.books, BookRoutes);
 		this.app.use(this.path.search, SearchRoutes);
 		this.app.use(this.path.$404, $404Route);
 	}

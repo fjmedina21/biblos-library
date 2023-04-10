@@ -24,7 +24,7 @@ export class Book extends BaseEntity {
     @Column("text")
     genre: string;
 
-    @Column({ type: "simple-json", nullable: true })
+    @Column({ type: "simple-json" })
     cover: { public_id: string, secure_url: string; };
 
     @Column({ type: "int", default: 0 })

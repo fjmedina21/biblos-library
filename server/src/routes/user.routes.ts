@@ -2,23 +2,15 @@ import { Router } from "express";
 import { check } from "express-validator";
 
 import { GetUser, GetUsers, UpdateUser, DeleteUser, CreateUser } from "../controllers";
-
-import {
-	IsUser,
-	IsAdmin,
-	EmailExist,
-	UserIdExist,
-	ValidateJWT,
-	ValidateFields,
-} from "../middlewares";
+import { IsUser, IsAdmin, EmailExist, UserIdExist, ValidateJWT, ValidateFields } from "../middlewares";
 
 const UserRoutes = Router();
 
-UserRoutes.get("/", [ValidateJWT, IsAdmin, ValidateFields], GetUsers);
+UserRoutes.get("/", [ValidateJWT, IsUser, ValidateFields], GetUsers);
 
 UserRoutes.get(
 	"/:id",
-	[ValidateJWT, IsAdmin, UserIdExist, ValidateFields],
+	[ValidateJWT, IsUser, UserIdExist, ValidateFields],
 	GetUser
 );
 
@@ -50,7 +42,7 @@ UserRoutes.patch(
 
 UserRoutes.delete(
 	"/:id",
-	[ValidateJWT, IsAdmin, UserIdExist, ValidateFields],
+	[ValidateJWT, IsUser, UserIdExist, ValidateFields],
 	DeleteUser
 );
 
