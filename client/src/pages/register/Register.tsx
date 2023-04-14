@@ -208,7 +208,7 @@ const Register = () => {
 
           <button className="w-full rounded-lg bg-indigo-600 p-3 font-medium text-white">
             {registrando ? (
-              <span className="h-5 w-5 rounded-full border-b-[2px] border-t-[2px] border-white inline-block animate-spin"></span>
+              <span className="h-4 w-4 rounded-full border-b-[2px] border-t-[2px] border-white inline-block animate-spin"></span>
             ) : (
               "Sign Up"
             )}

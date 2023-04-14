@@ -9,7 +9,7 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(
     JSON.parse(localStorage.getItem("user")!) || null
   );
-  const [error, setError] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const [ok, setOk] = useState<boolean>(false);
   const [okSignUp, setOkSignUp] = useState<boolean>(false);
   const [logging, setLogging] = useState<boolean>(false);
@@ -32,12 +32,12 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
         setOk(true);
         setLogging(false);
         setCurrentUser(res.data.result.info);
+        localStorage.setItem("token", JSON.stringify(res.data.result.token));
       })
       .catch((err) => {
         setLogging(false);
-        console.log(
-          err.response.data.result.message || "Password or email are invalid"
-        );
+        console.log(err)
+        setError(err.response.data?.result.message || "Something went wrong");
       });
   };
 
@@ -68,6 +68,8 @@ export const AuthContextProvider: React.FC<Props> = ({ children }) => {
         ok,
         okSignUp,
         logging,
+        error,
+        setError,
       }}
     >
       {children}

@@ -4,7 +4,7 @@ const Contact = () => {
   return (
     <div id="contacto" className=" flex flex-col items-center bg-white">
       <div className=" h-[64px] w-full bg-[url(/img/fl.svg)] bg-repeat rotate-180"></div>
-      <div className="w-[1400px] flex gap-5 py-[150px] ">
+      <div className="container flex gap-5 py-[150px] ">
         <span className="flex-2 text-3xl font-medium mt-8">
           ¿Tienes alguna duda o sugerencia con respecto a nuestra pagina
           web?&nbsp;

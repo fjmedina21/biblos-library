@@ -9,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [password, setPassword] = useState<string>("");
-  const { login, ok, logging } = useContext(AuthContext) as AuthContextType;
+  const { login, ok, logging, error } = useContext(AuthContext) as AuthContextType;
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!email) {
@@ -35,6 +35,7 @@ const Login = () => {
     <div
       className={`flex  min-h-screen justify-center selection:bg-rose-400 selection:text-white transition-all duration-300`}
     >
+
       <div className="left flex flex-1 items-center my-auto flex-col">
         <div className="logo  relative mb-7">
           <div className="absolute h-[1.5rem] w-[1.5rem] bg-amber-300 -top-2 right-4">
@@ -93,6 +94,10 @@ const Login = () => {
 
           <span className="text-[2.5rem] font-bold relative z-40 ">Biblos</span>
         </div>
+        {
+error &&
+          <span>{error}</span>
+        }
         <form
           action=""
           className="flex w-3/4 xl:w-1/2  flex-col items-center gap-6 px-10 md:px-0"
@@ -120,7 +125,7 @@ const Login = () => {
 
           <button className="w-full rounded-lg bg-indigo-600 p-3 font-medium text-white">
             {logging ? (
-              <span className="h-5 w-5 rounded-full border-b-[2px] border-t-[2px] border-white inline-block animate-spin"></span>
+              <span className="h-4 w-4 rounded-full border-b-[2px] border-t-[2px] border-white inline-block animate-spin"></span>
             ) : (
               "  Sign In"
             )}

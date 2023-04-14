@@ -1,7 +1,9 @@
 export interface User {
+  uId?: number
   firstName: string;
   lastName: string;
   email: string;
+  isAdmin?: boolean;
   password: string;
   confirmPassword: string;
 }
@@ -14,6 +16,8 @@ export interface AuthContextType {
   logout: () => void;
   ok: boolean;
   okSignUp: boolean;
-  logging: boolean
-
+  logging: boolean;
+error: string;
+setError: React.Dispatch<React.SetStateAction<string>>
+  
 }

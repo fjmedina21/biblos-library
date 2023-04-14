@@ -1,10 +1,9 @@
-import React from "react";
 
 const Titles = () => {
   return (
     <div className="bg-gray-100 flex justify-center py-10 ">
-      <div className="w-[1400px] h-[500px] flex items-center gap-[90px] ">
-        <div className="w-[300px] relative flex items-center ">
+      <div className="container h-auto md:h-[500px] flex flex-col  overflow-visible md:flex-row items-center gap-[90px] ">
+        <div className="w-[200px] md:w-[300px] relative flex items-center ">
           <div className="absolute bg-[#F2E9E4] -top-8 -left-8 w-full h-full">
             <span className="absolute bottom-4 left-2 leading-none rotate-180 [writing-mode:vertical-lr]  text-black inline-blocks uppercase tracking-widest">
               Cronica de una muerte anunciada
@@ -16,7 +15,7 @@ const Titles = () => {
           />
         </div>
 
-        <div className="w-[300px] relative flex items-center ">
+        <div className="w-[200px] md:w-[300px] relative flex items-center ">
           <div className="absolute bg-[#F2E9E4] -top-8 -left-8 w-full h-full">
             <span className="absolute bottom-4 left-2 leading-none rotate-180 [writing-mode:vertical-lr]  text-black inline-blocks uppercase tracking-widest">
               Don quijote de la mancha{" "}
@@ -28,7 +27,7 @@ const Titles = () => {
           />
         </div>
 
-        <div className="w-[300px] relative flex items-center ">
+        <div className="w-[200px] md:w-[300px] relative flex items-center ">
           <div className="absolute bg-[#F2E9E4] -top-8 -left-8 w-full h-full">
             <span className="absolute bottom-4 left-2 leading-none rotate-180 [writing-mode:vertical-lr]  text-black inline-blocks uppercase tracking-widest">
               Don quijote de la mancha{" "}
@@ -40,7 +39,7 @@ const Titles = () => {
           />
         </div>
 
-        <div className="w-[300px] relative flex items-center ">
+        <div className="w-[200px] md:w-[300px] relative flex items-center ">
           <div className="absolute bg-[#F2E9E4] -top-8 -left-8 w-full h-full">
             <span className="absolute bottom-4 left-2 leading-none rotate-180 [writing-mode:vertical-lr]  text-black inline-blocks uppercase tracking-widest">
               Don quijote de la mancha{" "}

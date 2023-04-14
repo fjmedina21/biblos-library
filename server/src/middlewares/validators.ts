@@ -5,130 +5,164 @@ import { User, Book } from "../models";
 import { ErrorHandler, GetToken } from "../helpers";
 
 export async function ValidateJWT(
-	req: Request,
-	res: Response,
-	next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-	try {
-		const { uId } = (await GetToken(req)) as JwtPayload;
+  try {
+    console.log(req.header("auth"));
+    const { uId } = (await GetToken(req)) as JwtPayload;
 
-		const userExist: User | null = await User.findOneBy({
-			uId,
-			state: true,
-		});
+    const userExist: User | null = await User.findOneBy({
+      uId,
+      state: true,
+    });
 
-		if (!userExist) throw new Error();
+    if (!userExist) throw new Error();
 
-		next();
-	} catch (error: unknown) {
-		if (error instanceof Error) return res.status(401).json({ result: { ok: false, message: error.message } });
-	}
+    next();
+  } catch (error: unknown) {
+    if (error instanceof Error)
+      return res
+        .status(401)
+        .json({ result: { ok: false, message: error.message } });
+  }
 }
 
 export async function IsAdmin(req: Request, res: Response, next: NextFunction) {
-	try {
-		const { isAdmin } = (await GetToken(req)) as JwtPayload;
+  try {
+    const { isAdmin } = (await GetToken(req)) as JwtPayload;
 
-		if (!isAdmin) throw new ErrorHandler("Need ADMIN access",403);
+    if (!isAdmin) throw new ErrorHandler("Need ADMIN access", 403);
 
-		next();
-	} catch (error: unknown) {
-		if (error instanceof ErrorHandler) return res.status(error.statusCode).json({ result: { ok: false, message: error.message } });
+    next();
+  } catch (error: unknown) {
+    if (error instanceof ErrorHandler)
+      return res
+        .status(error.statusCode)
+        .json({ result: { ok: false, message: error.message } });
 
-		if (error instanceof Error) return res.status(500).json({ result: { ok: false, message: error.message } });
-	}
+    if (error instanceof Error)
+      return res
+        .status(500)
+        .json({ result: { ok: false, message: error.message } });
+  }
 }
 
-export async function IsUser(
-	req: Request,
-	res: Response,
-	next: NextFunction
-) {
-	try {
-		const { isUser } = (await GetToken(req)) as JwtPayload;
+export async function IsUser(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { isUser } = (await GetToken(req)) as JwtPayload;
 
-		if (!isUser) throw new ErrorHandler("login or signup", 401);
+    if (!isUser) throw new ErrorHandler("login or signup", 401);
 
-		if (isUser) next();
-	} catch (error: unknown) {
-		if (error instanceof ErrorHandler) return res.status(error.statusCode).json({ result: { ok: false, message: error.message } });
+    if (isUser) next();
+  } catch (error: unknown) {
+    if (error instanceof ErrorHandler)
+      return res
+        .status(error.statusCode)
+        .json({ result: { ok: false, message: error.message } });
 
-		if (error instanceof Error) return res.status(500).json({ result: { ok: false, message: error.message } });
-	}
+    if (error instanceof Error)
+      return res
+        .status(500)
+        .json({ result: { ok: false, message: error.message } });
+  }
 }
 
 export async function EmailExist(
-	req: Request,
-	res: Response,
-	next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-	try {
-		const { email } = req.body;
+  try {
+    const { email } = req.body;
 
-		const user: User | null = await User.findOneBy({ email });
+    const user: User | null = await User.findOneBy({ email });
 
-		if (user) throw new ErrorHandler("Someone already has that email address. Try another one.", 400);
+    if (user)
+      throw new ErrorHandler(
+        "Someone already has that email address. Try another one.",
+        400
+      );
 
-		next();
-	} catch (error: unknown) {
-		if (error instanceof ErrorHandler) return res.status(error.statusCode).json({ result: { ok: false, message: error.message } });
+    next();
+  } catch (error: unknown) {
+    if (error instanceof ErrorHandler)
+      return res
+        .status(error.statusCode)
+        .json({ result: { ok: false, message: error.message } });
 
-		if (error instanceof Error) return res.status(500).json({ result: { ok: false, message: error.message } });
-	}
+    if (error instanceof Error)
+      return res
+        .status(500)
+        .json({ result: { ok: false, message: error.message } });
+  }
 }
 
 export async function UserIdExist(
-	req: Request,
-	res: Response,
-	next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-	try {
-		const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-		const user: User | null = await User.findOneBy({ uId: id, state: true });
+    const user: User | null = await User.findOneBy({ uId: id, state: true });
 
-		if (!user) throw new Error("User not exist");
+    if (!user) throw new Error("User not exist");
 
-		next();
-	} catch (error: unknown) {
-		if (error instanceof Error) return res.status(400).json({ result: { ok: false, message: error.message } });
-	}
+    next();
+  } catch (error: unknown) {
+    if (error instanceof Error)
+      return res
+        .status(400)
+        .json({ result: { ok: false, message: error.message } });
+  }
 }
 
 export async function BookExist(
-	req: Request,
-	res: Response,
-	next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-	try {
-		const { title } = req.body;
+  try {
+    const { title } = req.body;
 
-		const book: Book | null = await Book.findOneBy({ title });
+    const book: Book | null = await Book.findOneBy({ title });
 
-		if (book) throw new ErrorHandler("This book is already register.",400);
+    if (book) throw new ErrorHandler("This book is already register.", 400);
 
-		next();
-	} catch (error: unknown) {
-		if (error instanceof ErrorHandler) return res.status(error.statusCode).json({ result: { ok: false, message: error.message } });
+    next();
+  } catch (error: unknown) {
+    if (error instanceof ErrorHandler)
+      return res
+        .status(error.statusCode)
+        .json({ result: { ok: false, message: error.message } });
 
-		if (error instanceof Error) return res.status(400).json({ result: { ok: false, message: error.message } });
-	}
+    if (error instanceof Error)
+      return res
+        .status(400)
+        .json({ result: { ok: false, message: error.message } });
+  }
 }
 
 export async function BookIdExist(
-	req: Request,
-	res: Response,
-	next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-	try {
-		const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-		const book: Book | null = await Book.findOneBy({ uId: id });
+    const book: Book | null = await Book.findOneBy({ uId: id });
 
-		if (!book) throw new Error("Book not found");
+    if (!book) throw new Error("Book not found");
 
-		next();
-	} catch (error: unknown) {
-		if (error instanceof Error) return res.status(400).json({ result: { ok: false, message: error.message } });
-	}
+    next();
+  } catch (error: unknown) {
+    if (error instanceof Error)
+      return res
+        .status(400)
+        .json({ result: { ok: false, message: error.message } });
+  }
 }
