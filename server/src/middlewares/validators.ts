@@ -10,7 +10,6 @@ export async function ValidateJWT(
   next: NextFunction
 ) {
   try {
-    console.log(req.header("auth"));
     const { uId } = (await GetToken(req)) as JwtPayload;
 
     const userExist: User | null = await User.findOneBy({
@@ -156,7 +155,7 @@ export async function BookIdExist(
 
     const book: Book | null = await Book.findOneBy({ uId: id });
 
-    if (!book) throw new Error("Book not found");
+    if (!book) throw new Error("Book not exist");
 
     next();
   } catch (error: unknown) {

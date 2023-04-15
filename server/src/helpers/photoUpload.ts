@@ -1,6 +1,8 @@
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { UploadedFile } from "express-fileupload";
 import { config } from "../config";
+import { ErrorHandler } from './error.handler';
+import { response } from 'express';
 
 cloudinary.config({
     cloud_name: config.CLOUDINARY_NAME,
@@ -14,11 +16,11 @@ function validateFileExt(file: UploadedFile) {
         const validExtensions = ["jpg", "jpeg", "webp", "png", "svg"];
         const [, ext] = file.name.split('.');
 
-        if (!validExtensions.includes(ext.toLocaleLowerCase())) throw new Error("Invalid file type");
-    } catch (error: unknown) {
-        if (error instanceof Error) return Promise.reject(error.message);
+        if(!validExtensions.includes(ext.toLocaleLowerCase())) throw new ErrorHandler("Invalid file type", 400);
+    } catch(error: unknown) {
+        if (error instanceof ErrorHandler) return Promise.reject(error);
     }
-}
+};
 
 export async function PhotoUpload(file: UploadedFile, subfolder: string): Promise<UploadApiResponse> {
     const error = validateFileExt(file);

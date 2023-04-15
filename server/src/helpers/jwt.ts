@@ -44,14 +44,14 @@ export function GenerateResetJWT(email: string): Promise<unknown> {
 	});
 }
 
-export async function ValidateResetJWT(resetToken: string): Promise<User> {
+export async function ValidateResetJWT(resetToken: string): Promise<User | null> {
 	const { email } = jwt.verify(
 		resetToken,
 		config.JWT_RESET_TOKEN_SECRECT
 	) as JwtPayload;
 
-	return await User.findOneOrFail({
-		select: ["uId","password", "resetToken"],
+	return await User.findOne({
+		select: ["uId", "password", "resetToken"],
 		where: { email, resetToken },
 	});
 }
