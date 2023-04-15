@@ -8,3 +8,4 @@
 - Abrahan Rivera, 20210395
 - Joan Stiven, 202010467
 - Arbert Agramonte, 202010652
+- Lizandro Galan, 
