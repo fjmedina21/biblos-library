@@ -56,7 +56,7 @@ const Book: React.FC<Props> = ({ book }) => {
             {book.title}
           </span>
           <div className="flex-2"></div>
-          {currentUser.isAdmin && (
+          {!currentUser.isAdmin && (
             <div className="flex gap-2 pr-3">
               <button
                 className="bg-rose-500 py-1 px-2 rounded-full  text-white font-medium text-sm"

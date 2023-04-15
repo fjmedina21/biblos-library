@@ -7,6 +7,7 @@ import Share from "../share/Share";
 const Config = () => {
   const { currentUser, logout } = useContext(AuthContext) as AuthContextType;
   const [addBook, setAddBook] = useState<boolean>(false);
+  console.log(currentUser.isAdmin)
   const navigate = useNavigate();
   return (
     <>
@@ -17,7 +18,7 @@ const Config = () => {
           <img className="h-10 w-10 rounded-full object-cover" src="https://picsum.photos/200/300" alt="" />
           <span>{currentUser.firstName +" "+currentUser.lastName}</span>
         </div>
-        {currentUser.isAdmin && (
+        {!currentUser.isAdmin && (
           <>
           <Link to="/home/userList" className="flex gap-2 items-center p-3  hover:bg-gray-200 transition duration-300">
             

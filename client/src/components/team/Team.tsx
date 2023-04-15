@@ -1,4 +1,6 @@
 import { useRef, useEffect, useState } from "react";
+//import React from "react";
+
 const Team = () => {
   const ref = useRef<any>();
   const [isIntersecting, setIsIntersecting] = useState(false);

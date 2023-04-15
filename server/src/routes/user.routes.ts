@@ -42,7 +42,6 @@ UserRoutes.patch(
 
 UserRoutes.delete(
 	"/:id",
-	[ValidateJWT, UserIdExist, ValidateFields],
 	[ValidateJWT, IsUser, UserIdExist, ValidateFields],
 	DeleteUser
 );

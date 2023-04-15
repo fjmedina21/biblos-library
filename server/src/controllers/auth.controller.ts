@@ -34,11 +34,11 @@ export const LogIn = async (req: Request, res: Response) => {
 
     if (!user || !user.state) throw new ErrorHandler("That account doesn't exist. Try another or create a new one", 400);
 
-    const { password, createdAt, updatedAt, resetToken, state, isAdmin, isUser, ...info } = user;
+    const { password, createdAt, updatedAt, resetToken, state, ...info } = user;
 
     if (!user.comparePassword(req.body.password)) throw new ErrorHandler("Incorrect Password", 400);
 
-    const token = (await GenerateJWT(user.uId, isAdmin, isUser)) as string;
+    const token = (await GenerateJWT(user.uId, user.isAdmin, user.isUser)) as string;
     res.status(200).json({ result: { ok: true, info, token } });
   } catch (error: unknown) {
     if (error instanceof ErrorHandler) return res.status(error.statusCode).json({ result: error.toJson() });
